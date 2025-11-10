@@ -1,0 +1,23 @@
+{
+  "name": "otnetdesktopappplayer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview --port 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^7.0.0",
+    "hls.js": "^1.6.5",
+    "shaka-player": "^4.15.5",
+    "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "wavesurfer.js": "^7.10.0"
+  }
+}

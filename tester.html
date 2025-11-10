@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>OTNet Player – Video DRM Demo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <style>
+            :root {
+                --bg: #0b0e14;
+                --fg: #e6e6e6;
+                --muted: #9ca3af;
+                --accent: #3b82f6;
+                --card: #141820;
+                --panel: #0f131a;
+                --border: #1e2532;
+                --radius: 14px;
+                --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+                --maxw: 980px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+                background: radial-gradient(1200px 600px at 20% -10%, #101624 0%, #0b0e14 60%);
+            }
+
+            body {
+                margin: 0;
+                color: var(--fg);
+                font: 15px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, Inter, Arial,
+                    sans-serif;
+                display: grid;
+                place-items: center;
+                padding: 24px;
+            }
+
+            .wrap {
+                width: min(100%, var(--maxw));
+                background: color-mix(in srgb, var(--card) 94%, #000 6%);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                overflow: clip;
+            }
+
+            .header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                padding: 18px 22px;
+                background: linear-gradient(180deg, #101622, #0e1420);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .title {
+                margin: 0;
+                font-size: 18px;
+                letter-spacing: 0.2px;
+            }
+
+            .title .lock {
+                filter: saturate(1.2);
+                margin-right: 8px;
+            }
+            .title .brand {
+                color: var(--accent);
+                font-weight: 600;
+            }
+
+            .back a {
+                color: var(--accent);
+                text-decoration: none;
+                font-weight: 600;
+            }
+            .back a:hover {
+                text-decoration: underline;
+            }
+
+            .content {
+                padding: 22px;
+                display: grid;
+                gap: 16px;
+            }
+
+            .stage {
+                background: var(--panel);
+                border: 1px solid #222a38;
+                border-radius: calc(var(--radius) - 6px);
+                padding: 10px;
+            }
+
+            .stage-inner {
+                position: relative;
+                width: 100%;
+                border: 1px solid #1e2532;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            otnet-video-player {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+            .note {
+                color: var(--muted);
+                font-size: 0.94rem;
+                text-align: center;
+                padding: 10px 12px 2px;
+            }
+
+            .meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px 14px;
+                justify-content: center;
+                color: #cbd5e1;
+                font-size: 13px;
+                opacity: 0.9;
+            }
+            .meta .pill {
+                padding: 6px 10px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: #0d1220;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrap">
+            <header class="header">
+                <h1 class="title">
+                    <span class="lock">🔐</span>
+                    <span class="brand">OTNet</span> Video DRM Demo
+                </h1>
+                <div class="back"><a href="./index.html">Back to Demo Hub</a></div>
+            </header>
+
+            <section class="content" id="video-drm">
+                <div class="stage">
+                    <div class="stage-inner">
+                        <otnet-audio-player id="audioDrmEl"></otnet-audio-player>
+                    </div>
+                </div>
+
+                <div class="meta">
+                    <div class="pill">HLS · FairPlay</div>
+                    <div class="pill">DASH · Widevine / PlayReady</div>
+                    <div class="pill">Demo configuration</div>
+                </div>
+
+                <p class="note">
+                    Replace sample license endpoints and sources with your own production values.
+                </p>
+            </section>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                customElements.whenDefined('otnet-audio-player').then(() => {
+                    const el = document.getElementById('audioDrmEl');
+                    if (!el) return;
+
+                    const config = {
+                        options: {
+                            autoplay: true,
+                            muted: false,
+                            showDebug: true,
+                            openPlaylist: true,
+                            showVideo: false,
+                            normalize: true,
+                            waveformHeight: 96,
+                        },
+                        playlist: [
+                            {
+                                metadata: {
+                                    title: "Something Good '08 - Radio Edit",
+                                    description: '',
+                                    duration: 155.01061224489797,
+                                    track: {
+                                        no: null,
+                                        of: null,
+                                    },
+                                    disk: {
+                                        no: null,
+                                        of: null,
+                                    },
+                                    artists: 'Utah Saints',
+                                    artist: 'Utah Saints',
+                                    album: "Something Good '08 (Remixes)",
+                                    genre: '',
+                                    label: '',
+                                    year: null,
+                                    date: '',
+                                    key: 'G#m',
+                                    bpm: 128,
+                                    comment: '',
+                                },
+                                variants: [
+                                    {
+                                        id: '1',
+                                        protocol: 'audio',
+                                        entrypoint:
+                                            'https://s3.us-east-1.amazonaws.com/s3b-delivery-bucket/15586568_microdosing__original_mix_.mp3',
+                                        duration: 155.01061224489797,
+                                        resources: {
+                                            poster: 'https://s3.us-east-1.amazonaws.com/s3b-delivery-bucket/16980086_drowned__original_mix_.jpeg',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    };
+                    el.setup(config);
+                    el.onPlaylistItemDrag = ({ index, track, entry }) => {
+                        console.log('Track dragged from playlist:', index, entry);
+                    };
+                });
+            });
+        </script>
+    </body>
+</html>
