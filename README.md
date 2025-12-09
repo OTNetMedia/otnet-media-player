@@ -123,10 +123,6 @@ The build output will be available in the `dist/` directory and can be served st
                                 protocol: 'dash',
                                 drm: {
                                     provider: 'ezdrm',
-                                    keySystems: [
-                                        '["com.widevine.alpha"',
-                                        '"com.microsoft.playready"]',
-                                    ],
                                     widevine: {
                                         serverURL:
                                             'https://widevine-dash.ezdrm.com/widevine-php/widevine-foreignkey.php?pX=000000',
@@ -149,7 +145,6 @@ The build output will be available in the `dist/` directory and can be served st
                                 protocol: 'hls',
                                 drm: {
                                     provider: 'ezdrm',
-                                    keySystems: ['["com.apple.fps.1_0"]'],
                                     fairplay: {
                                         serverURL:
                                             'https://fps.ezdrm.com/api/licenses/your-key-here',
