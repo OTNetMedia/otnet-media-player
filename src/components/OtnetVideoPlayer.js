@@ -345,7 +345,7 @@ class OtnetVideoPlayer extends HTMLElement {
         playerWrapper.style.removeProperty('--otnet-aspect-ratio');
         this.video.style.removeProperty('object-fit');
 
-        const aspect = this.options.aspect;
+        const aspect = this.options.aspect || '16:9';
         switch (aspect) {
             case '16:9':
                 playerWrapper.classList.add('otnet-aspect');
