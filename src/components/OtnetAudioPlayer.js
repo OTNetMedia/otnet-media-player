@@ -1566,40 +1566,58 @@ input[type="range"]::-moz-range-track {
 .playlist-info > *:first-child { margin-top: 0; }
 .playlist-info > *:last-child  { margin-bottom: 0; }
 
+.otnet__menu {
+  position: relative;
+}
+
+/* Container */
 .otnet__menu__container {
-  background: #ffffffee;
-  color: #4a5464;
-  padding: 10px;
-  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  padding: 8px 0;
+  border-radius: 6px;
   position: absolute;
   bottom: 45px;
   right: 10px;
   z-index: 10;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-  min-width: 150px;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
+/* Items */
 .otnet__menu__item,
 .otnet__menu__back {
   display: block;
-  background: #f4f4f4;
-  color: #4a5464;
+  background: transparent;
+  color: #eee;
   border: none;
-  padding: 7px 10px;
-  margin: 5px 0;
-  cursor: pointer;
-  border-radius: 4px;
-  white-space: nowrap;
+  padding: 10px 14px;
+  margin: 0;
   width: 100%;
   text-align: left;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .otnet__menu__item:hover,
-.otnet__menu__back:hover,
-.otnet__menu__item.active {
-  background: #ddd;
+.otnet__menu__back:hover {
+  background: #333;
 }
 
+.otnet__menu__item.active {
+  background: #444;
+  color: #ffd700;
+}
+
+/* Back button */
+.otnet__menu__back {
+  border-bottom: 1px solid #333;
+}
+
+/* Subsections */
+#otnet-settings > div {
+  padding: 0;
+}
 
 .otnet__controls {
   opacity: 1;

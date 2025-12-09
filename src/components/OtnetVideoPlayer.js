@@ -240,6 +240,15 @@ class OtnetVideoPlayer extends HTMLElement {
 
         const tracks = this.player.getVariantTracks();
 
+        // If no variant tracks available (Safari + FairPlay native HLS)
+        if (!tracks || tracks.length === 0) {
+            console.warn('No variant tracks available, hiding quality menu.');
+            this.shadowRoot
+                .querySelectorAll('.otnet__menu__item_quality')
+                .forEach((el) => el.remove());
+            return; // do not append any buttons
+        }
+
         tracks.forEach((track) => {
             const button = createButton({
                 label: `${track.width}x${track.height} ${Math.round(track.bandwidth / 1000)} kbps`,
@@ -251,8 +260,8 @@ class OtnetVideoPlayer extends HTMLElement {
                     qualityMenu
                         .querySelectorAll('.otnet__menu__item')
                         .forEach((btn) => btn.classList.remove('active'));
-                    button.classList.add('active');
 
+                    button.classList.add('active');
                     this.closeSettingsMenu();
                 },
             });
@@ -330,6 +339,57 @@ class OtnetVideoPlayer extends HTMLElement {
 
         this.overlay = shadow.getElementById('otnet-overlay');
         const playerWrapper = shadow.getElementById('otnet-player-wrapper');
+
+        // Reset wrapper first
+        playerWrapper.classList.remove('otnet-aspect');
+        playerWrapper.style.removeProperty('--otnet-aspect-ratio');
+        this.video.style.removeProperty('object-fit');
+
+        const aspect = this.options.aspect;
+        switch (aspect) {
+            case '16:9':
+                playerWrapper.classList.add('otnet-aspect');
+                playerWrapper.style.setProperty('--otnet-aspect-ratio', '56.25%'); // 9/16
+                break;
+
+            case '4:3':
+                playerWrapper.classList.add('otnet-aspect');
+                playerWrapper.style.setProperty('--otnet-aspect-ratio', '75%'); // 3/4
+                break;
+
+            case '21:9':
+                playerWrapper.classList.add('otnet-aspect');
+                playerWrapper.style.setProperty('--otnet-aspect-ratio', '42.85%'); // 9/21
+                break;
+
+            case '18:9':
+                playerWrapper.classList.add('otnet-aspect');
+                playerWrapper.style.setProperty('--otnet-aspect-ratio', '50%'); // 9/18
+                break;
+
+            case '1:1':
+                playerWrapper.classList.add('otnet-aspect');
+                playerWrapper.style.setProperty('--otnet-aspect-ratio', '100%'); // square
+                break;
+
+            case '9:16':
+                playerWrapper.classList.add('otnet-aspect');
+                playerWrapper.style.setProperty('--otnet-aspect-ratio', '177.77%'); // 16/9
+                break;
+
+            case 'fit':
+                this.video.style.objectFit = 'cover';
+                break;
+
+            case 'contain':
+                this.video.style.objectFit = 'contain';
+                break;
+
+            case 'auto':
+            default:
+                this.video.style.objectFit = 'contain';
+                break;
+        }
 
         if (this.playlist.length > 1) {
             const btn = this.shadowRoot.getElementById('otnet-playlistBtn');
@@ -908,6 +968,28 @@ class OtnetVideoPlayer extends HTMLElement {
     height: 100%;
 }
 
+/* Optional aspect-ratio wrapper */
+.otnet-aspect {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.otnet-aspect::before {
+    content: "";
+    display: block;
+    padding-top: var(--otnet-aspect-ratio, 56.25%); /* default 16:9 */
+}
+
+.otnet-aspect video {
+    background: #0A0A0A;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 video:focus,
 button:focus {
     outline: none;
@@ -924,14 +1006,14 @@ button:focus {
     justify-content: center;
 }
 
-video {
+/*video {
     max-width: 100%;
     max-height: 100vh;
     height: auto;
     display: block;
     margin: 0 auto;
     object-fit: contain;
-}
+}*/
 
 ::slotted(.shaka-text-container) {
     bottom: 50px !important;
@@ -1527,39 +1609,57 @@ input[type="range"]::-moz-range-track {
   margin-right: 4px;
 }
 
+.otnet__menu {
+  position: relative;
+}
 
+/* Container */
 .otnet__menu__container {
-  background: #ffffffee;
-  color: #4a5464;
-  padding: 10px;
-  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  padding: 8px 0;
+  border-radius: 6px;
   position: absolute;
   bottom: 45px;
   right: 10px;
   z-index: 10;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-  min-width: 150px;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
+/* Items */
 .otnet__menu__item,
 .otnet__menu__back {
   display: block;
-  background: #f4f4f4;
-  color: #4a5464;
+  background: transparent;
+  color: #eee;
   border: none;
-  padding: 7px 10px;
-  margin: 5px 0;
-  cursor: pointer;
-  border-radius: 4px;
-  white-space: nowrap;
+  padding: 10px 14px;
+  margin: 0;
   width: 100%;
   text-align: left;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .otnet__menu__item:hover,
-.otnet__menu__back:hover,
+.otnet__menu__back:hover {
+  background: #333;
+}
+
 .otnet__menu__item.active {
-  background: #ddd;
+  background: #444;
+  color: #ffd700;
+}
+
+/* Back button */
+.otnet__menu__back {
+  border-bottom: 1px solid #333;
+}
+
+/* Subsections */
+#otnet-settings > div {
+  padding: 0;
 }
 
 .otnet__controls {
@@ -1624,7 +1724,7 @@ input[type="range"]::-moz-range-track {
             <div class="otnet-overlay__track-group otnet-overlay__custom-group"></div>
         </div>
     </div>
-    <video autoplay></video>
+    <video></video>
     <div id="otnet-subtitle-wrapper" class="otnet__subtitle-wrapper"></div>
     <div id="otnet-native-subtitle-wrapper"></div>
     <div id="otnet-bif-preview" class="otnet-bif-move">
@@ -1657,7 +1757,7 @@ input[type="range"]::-moz-range-track {
           <div id="otnet-settings-home">
             <button class="otnet__menu__item" data-target="captions">Captions</button>
             <button class="otnet__menu__item" data-target="audio">Audio</button>
-            <button class="otnet__menu__item" data-target="quality">Resolution</button>
+            <button class="otnet__menu__item otnet__menu__item_quality" data-target="quality">Resolution</button>
             <button class="otnet__menu__item" data-target="speed">Speed</button>
             <button class="otnet__menu__item" data-click="pip">Picture in Picture</button>
           </div>
